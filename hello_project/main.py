@@ -5,3 +5,5 @@ for i in a:
     print("number: ", i)
 
 print("By!")
+
+print("hello my dear friend")

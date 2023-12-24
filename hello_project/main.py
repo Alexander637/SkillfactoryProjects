@@ -5,3 +5,5 @@ for i in a:
     print("number: ", i)
 
 print("By!")
+
+print("say hi all the time")

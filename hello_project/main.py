@@ -7,3 +7,5 @@ for i in a:
 print("By!")
 
 print("say hi all the time")
+
+print("hello my dear friend")

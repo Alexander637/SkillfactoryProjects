@@ -21,7 +21,7 @@ def ask(row_column_num):
         try:
             x = int(input("Введите координату x: "))
             y = int(input("Введите координату y: "))
-            if 0 <= x <= row_column_num and 0 <= y <= row_column_num:
+            if 0 <= x <= row_column_num - 1 and 0 <= y <= row_column_num - 1:
                 if field[x][y] == " - ":
                     return x, y
                 else:

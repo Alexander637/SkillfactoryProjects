@@ -68,7 +68,7 @@ def win_check(array):
 
     symbols = []
     for i in range(len(array)):
-        symbols.append(array[i][2 - i])
+        symbols.append(array[i][len(array) - 1 - i])
     if all(symbol == " X " for symbol in symbols):
         print("Выиграли крестики!")
         return True

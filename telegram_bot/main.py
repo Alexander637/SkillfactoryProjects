@@ -41,4 +41,4 @@ def convert(message: telebot.types.Message):
         bot.reply_to(message, text)
 
 
-bot.polling(none_stop=True)
+bot.polling()

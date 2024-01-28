@@ -6,4 +6,5 @@
 *telegram_bot/.idea
 *telegram_bot/__pycache__
 *telegram_bot/venv
-*telegram_bot/mydata.py
+*telegram_bot/private_data.py
+

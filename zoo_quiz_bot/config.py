@@ -3,6 +3,7 @@ from private_data import TOKEN_DATA, BOT_TAG_DATA, WORKER_ID_DATA
 TOKEN = TOKEN_DATA
 BOT_TAG = BOT_TAG_DATA
 WORKER_ID = WORKER_ID_DATA
+
 user_answers = {}
 user_feedback = {}
 

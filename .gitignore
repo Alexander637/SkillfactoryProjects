@@ -7,4 +7,9 @@
 *telegram_bot/__pycache__
 *telegram_bot/venv
 *telegram_bot/private_data.py
-
+*zoo_data_parser
+*zoo_quiz_bot/.idea
+*zoo_quiz_bot/__pycache__
+*zoo_quiz_bot/data
+*zoo_quiz_bot/private_data.py
+*zoo_quiz_bot/image

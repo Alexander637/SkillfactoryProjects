@@ -140,8 +140,13 @@ def send_final_answers(user_id, message):
     user_answers = config.user_answers[user_id]["answers"].values()
     selected_animal = config.animals.get(tuple(user_answers), "Животное не определено")
 
-    final_message = (f"Подходящее животное: {selected_animal}\n\n{config.animal_description[selected_animal]}\n\n"
-                     f"{config.guardianship_program}")
+    final_message = f"Подходящее животное: {selected_animal}"
+
+    if selected_animal != "Животное не определено":
+        final_message += f"\n\n{config.animal_description.get(selected_animal, '')}"
+
+    final_message += f"\n\n{config.guardianship_program}"
+
     if selected_animal in config.animal_images:
         image_path = config.animal_images[selected_animal]
         with open(image_path, 'rb') as photo:

@@ -13,3 +13,6 @@
 *zoo_quiz_bot/data
 *zoo_quiz_bot/private_data.py
 *zoo_quiz_bot/image
+*django-project/venv
+*django-project/project/project/__pycache__
+*django-project/.idea

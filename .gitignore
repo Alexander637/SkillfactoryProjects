@@ -16,3 +16,8 @@
 *django-project/venv
 *django-project/project/project/__pycache__
 *django-project/.idea
+*news_paper
+*news_portal_project/.idea
+*news_portal_project/venv
+*news_portal_project/project/project/__pycache__
+*news_portal_project/project/news/__pycache__

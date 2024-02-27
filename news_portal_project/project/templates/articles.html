@@ -1,0 +1,25 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Articles
+{% endblock title %}
+
+{% block content %}
+    <h1>Все статьи</h1>
+    <hr>
+    {% if articles %}
+           {% for article in articles %}
+                <div>
+                    <a href="{% url 'article_detail' pk=article.id %}">
+                        <h5>{{ article.title|censor }}</h5>
+                    </a>
+                    <p>{{ article.dateCreation|date:"d F Y"}}</p>
+                    <p>{{ article.text|censor|truncatechars:20 }}</p>
+                </div>
+                <br>
+           {% endfor %}
+    {% else %}
+       <h2>Станей нет!</h2>
+    {% endif %}
+{% endblock content %}

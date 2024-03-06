@@ -21,3 +21,4 @@
 *news_portal_project/venv
 *news_portal_project/project/project/__pycache__
 *news_portal_project/project/news/__pycache__
+*news_portal_project/project/news/templatetags/__pycache__

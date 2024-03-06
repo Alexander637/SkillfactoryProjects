@@ -1,0 +1,8 @@
+{% if 'news' in request.path %}
+    <a href="{% url 'create_news'%}">Create news</a>
+{% elif 'articles' in request.path %}
+    <a href="{% url 'create_articles'%}">Create article</a>
+{% else %}
+    <a href="{% url 'create_news'%}">Create news</a>
+    <a href="{% url 'create_articles'%}">Create article</a>
+{% endif %}

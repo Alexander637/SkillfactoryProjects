@@ -1,27 +1,130 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.http import HttpResponseRedirect
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post
+from .filters import PostFilter
+from .forms import PostForm
+from django.urls import reverse_lazy
 
 
-class NewsList(ListView):
+class FilteredListView(ListView):
+    paginate_by = 10
+    filter_class = None
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = self.filter_class(self.request.GET, queryset)
+        return self.filterset.qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filterset'] = self.filterset
+        return context
+
+
+class PostList(FilteredListView):
+    model = Post
+    queryset = Post.objects.order_by('-dateCreation')
+    filter_class = PostFilter
+    template_name = 'posts.html'
+    context_object_name = 'posts'
+
+
+class NewsList(FilteredListView):
+    model = Post
     queryset = Post.objects.filter(categoryType="NW").order_by('-dateCreation')
+    filter_class = PostFilter
     template_name = 'news.html'
     context_object_name = 'news'
 
 
-class NewDetail(DetailView):
-    queryset = Post.objects.filter(categoryType="NW")
-    template_name = 'new.html'
-    context_object_name = 'new'
-
-
-class ArticlesList(ListView):
+class ArticlesList(FilteredListView):
+    model = Post
     queryset = Post.objects.filter(categoryType="AR").order_by('-dateCreation')
+    filter_class = PostFilter
     template_name = 'articles.html'
     context_object_name = 'articles'
 
 
-class ArticleDetail(DetailView):
-    queryset = Post.objects.filter(categoryType="AR")
-    template_name = 'article.html'
-    context_object_name = 'article'
+class PostDetail(DetailView):
+    model = Post
+    template_name = 'post.html'
+    context_object_name = 'post'
+
+
+class PostTypeMixin:
+    form_class = PostForm
+    model = Post
+    template_name = 'post_edit.html'
+    success_url = reverse_lazy('post_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        url_path = self.request.path
+        category_label = 'News' if 'news' in url_path else 'Article'
+
+        if 'create' in url_path:
+            context['post_type'] = f'Create {category_label}'
+        elif 'edit' in url_path:
+            context['post_type'] = f'Edit {category_label}'
+
+        return context
+
+    def form_invalid(self, form):
+        errors = form.errors
+
+        for field in errors:
+            if 'Ensure this value has at most' in str(errors[field]):
+                value = form[field].value()
+                truncated_value = value[:128]
+                form.add_error(field, f'Сократите до: {truncated_value}')
+
+        return super().form_invalid(form)
+
+
+class PostCreate(PostTypeMixin, CreateView):
+
+    def form_valid(self, form):
+        url_path = self.request.path
+        post = form.save(commit=False)
+
+        if 'articles' in url_path:
+            post.categoryType = 'AR'
+        elif 'news' in url_path:
+            post.categoryType = 'NW'
+
+        post.author_id = form.cleaned_data['author'].id
+        if form.is_valid():
+            post.save()
+
+        return super().form_valid(form)
+
+
+class PostUpdate(PostTypeMixin, UpdateView):
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.author_id = form.cleaned_data['author'].id
+        post.save()
+        return super().form_valid(form)
+
+
+class PostDelete(PostTypeMixin, DeleteView):
+    template_name = 'post_confirm_delete.html'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        url_path = self.request.path
+
+        if 'news' in url_path:
+            context['delete_message'] = 'Are you sure you want to delete this news?'
+        elif 'articles' in url_path:
+            context['delete_message'] = 'Are you sure you want to delete this article?'
+
+        return context
+

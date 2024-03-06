@@ -6,7 +6,14 @@ Articles
 {% endblock title %}
 
 {% block content %}
+    {% with 'flatpages/filters_form.html' as template_name %}
+        {% include template_name %}
+    {% endwith %}
+
     <h1>Все статьи</h1>
+    {% with 'create_post_link.html' as template_name %}
+        {% include template_name %}
+    {% endwith %}
     <hr>
     {% if articles %}
            {% for article in articles %}
@@ -22,4 +29,9 @@ Articles
     {% else %}
        <h2>Станей нет!</h2>
     {% endif %}
+
+    {% with 'flatpages/paginate.html' as template_name %}
+        {% include template_name %}
+    {% endwith %}
+
 {% endblock content %}

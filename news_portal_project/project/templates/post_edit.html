@@ -1,0 +1,13 @@
+{% extends 'flatpages/default.html' %}
+{% block title %}
+    {{ post_type }}
+{% endblock title %}
+{% block content %}
+    <h1>{{ post_type }}</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Edit" />
+    </form>
+
+{% endblock content %}

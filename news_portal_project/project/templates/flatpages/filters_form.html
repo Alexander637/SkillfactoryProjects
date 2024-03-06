@@ -1,0 +1,22 @@
+{% if request.resolver_match.url_name == "post_list" %}
+    <form action="" method="get">
+        {% csrf_token %}
+        {{ filterset.form.as_p }}
+        <input type="submit" value="Найти" />
+    </form>
+{% else %}
+    <form action="" method="get">
+        <div class="form-group">
+            {{ filterset.form.title.label_tag }}
+            {{ filterset.form.title }}
+        </div>
+        <div class="form-group">
+            {% csrf_token %}
+            {{ filterset.form.dateCreation.label_tag }}
+            {{ filterset.form.dateCreation }}
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Найти" />
+        </div>
+    </form>
+{% endif %}

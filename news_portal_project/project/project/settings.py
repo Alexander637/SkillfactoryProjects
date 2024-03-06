@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'news',
     'django_filters',
-    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [

@@ -4,9 +4,12 @@ from .models import Post
 from .filters import PostFilter
 from .forms import PostForm
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
-class FilteredListView(ListView):
+class FilteredListView(LoginRequiredMixin, ListView):
+    raise_exception = True
     paginate_by = 10
     filter_class = None
 
@@ -45,13 +48,13 @@ class ArticlesList(FilteredListView):
     context_object_name = 'articles'
 
 
-class PostDetail(DetailView):
+class PostDetail(LoginRequiredMixin, DetailView):
     model = Post
     template_name = 'post.html'
     context_object_name = 'post'
 
 
-class PostTypeMixin:
+class PostTypeMixin(LoginRequiredMixin):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
@@ -81,7 +84,8 @@ class PostTypeMixin:
         return super().form_invalid(form)
 
 
-class PostCreate(PostTypeMixin, CreateView):
+class PostCreate(PostTypeMixin, PermissionRequiredMixin, CreateView):
+    permission_required = 'news.add_post'
 
     def form_valid(self, form):
         url_path = self.request.path
@@ -99,7 +103,8 @@ class PostCreate(PostTypeMixin, CreateView):
         return super().form_valid(form)
 
 
-class PostUpdate(PostTypeMixin, UpdateView):
+class PostUpdate(PostTypeMixin, PermissionRequiredMixin, UpdateView):
+    permission_required = 'news.change_post'
 
     def form_valid(self, form):
         post = form.save(commit=False)
@@ -108,8 +113,9 @@ class PostUpdate(PostTypeMixin, UpdateView):
         return super().form_valid(form)
 
 
-class PostDelete(PostTypeMixin, DeleteView):
+class PostDelete(PostTypeMixin, PermissionRequiredMixin, DeleteView):
     template_name = 'post_confirm_delete.html'
+    permission_required = 'news.delete_post'
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()

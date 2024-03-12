@@ -10,11 +10,19 @@
     <h3>Рейтинг: {{ post.rating }}</h3>
     <p>{{ post.text|censor }}</p>
     <p>{{ post.dateCreation|date:"d F Y" }}</p>
-    {% if post.categoryType == 'NW' %}
-        <a href="{% url 'edit_news' pk=post.id %}">Редактировать</a>
-        <a href="{% url 'news_delete' pk=post.id %}">Удалить</a>
-    {% elif post.categoryType == 'AR' %}
-        <a href="{% url 'edit_article' pk=post.id %}">Редактировать</a>
-        <a href="{% url 'article_delete' pk=post.id %}">Удалить</a>
+    {% if perms.news.change_post %}
+        {% if post.categoryType == 'NW' %}
+            <a href="{% url 'edit_news' pk=post.id %}">Редактировать</a>
+        {% elif post.categoryType == 'AR' %}
+            <a href="{% url 'edit_article' pk=post.id %}">Редактировать</a>
+        {% endif %}
     {% endif %}
+    {% if perms.news.delete_post %}
+        {% if post.categoryType == 'NW' %}
+            <a href="{% url 'news_delete' pk=post.id %}">Удалить</a>
+        {% elif post.categoryType == 'AR' %}
+            <a href="{% url 'article_delete' pk=post.id %}">Удалить</a>
+        {% endif %}
+    {% endif %}
+
 {% endblock content %}

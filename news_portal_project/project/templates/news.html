@@ -10,9 +10,11 @@ News
         {% include template_name %}
     {% endwith %}
     <h1>Все новости</h1>
-    {% with 'create_post_link.html' as template_name %}
-        {% include template_name %}
-    {% endwith %}
+    {% if perms.news.add_post %}
+        {% with 'create_post_link.html' as template_name %}
+            {% include template_name %}
+        {% endwith %}
+    {% endif %}
     <hr>
     {% if news %}
            {% for new in news %}

@@ -1,5 +1,6 @@
 from django import template
 import re
+from django.contrib.auth.decorators import login_required
 
 register = template.Library()
 
@@ -21,3 +22,8 @@ def url_replace(context, **kwargs):
     for k, v in kwargs.items():
         d[k] = v
     return d.urlencode()
+
+
+@login_required
+def show_protected_page(request):
+    pass

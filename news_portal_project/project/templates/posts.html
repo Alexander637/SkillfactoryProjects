@@ -10,9 +10,11 @@ All posts
         {% include template_name %}
     {% endwith %}
     <h1>Все посты</h1>
-    {% with 'create_post_link.html' as template_name %}
-        {% include template_name %}
-    {% endwith %}
+    {% if perms.news.add_post %}
+        {% with 'create_post_link.html' as template_name %}
+            {% include template_name %}
+        {% endwith %}
+    {% endif %}
     <hr>
     {% if posts %}
            {% for post in posts %}

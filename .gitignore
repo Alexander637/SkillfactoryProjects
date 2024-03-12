@@ -22,3 +22,5 @@
 *news_portal_project/project/project/__pycache__
 *news_portal_project/project/news/__pycache__
 *news_portal_project/project/news/templatetags/__pycache__
+*news_portal_project/project/accounts/__pycache__
+*news_portal_project/project/project/.env

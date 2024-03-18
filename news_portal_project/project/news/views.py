@@ -1,17 +1,20 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post
+from .models import Post, Category, PostCategory
 from .filters import PostFilter
 from .forms import PostForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import get_object_or_404, render
 
 
 class FilteredListView(LoginRequiredMixin, ListView):
     raise_exception = True
     paginate_by = 10
     filter_class = None
+
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -46,6 +49,25 @@ class ArticlesList(FilteredListView):
     filter_class = PostFilter
     template_name = 'articles.html'
     context_object_name = 'articles'
+
+
+class CategoryList(ListView):
+    model = Post
+    template_name = 'category_list.html'
+    context_object_name = 'category'
+
+    def get_queryset(self):
+        self.postCategory = get_object_or_404(Category, id=self.kwargs['pk'])
+        queryset = Post.objects.filter(postCategory=self.postCategory).order_by('-dateCreation')
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_subscriber'] = self.request.user not in self.postCategory.subscribers.all()
+        context['category'] = self.postCategory
+
+        return context
 
 
 class PostDetail(LoginRequiredMixin, DetailView):
@@ -95,10 +117,13 @@ class PostCreate(PostTypeMixin, PermissionRequiredMixin, CreateView):
             post.categoryType = 'AR'
         elif 'news' in url_path:
             post.categoryType = 'NW'
-
         post.author_id = form.cleaned_data['author'].id
+        category = form.cleaned_data['category']
+        post_category = PostCategory(postThrough=post, categoryThrough=category)
+
         if form.is_valid():
             post.save()
+            post_category.save()
 
         return super().form_valid(form)
 
@@ -133,4 +158,14 @@ class PostDelete(PostTypeMixin, PermissionRequiredMixin, DeleteView):
             context['delete_message'] = 'Are you sure you want to delete this article?'
 
         return context
+
+
+@login_required
+def subscribe(request, pk):
+    user = request.user
+    category = Category.objects.get(id=pk)
+    category.subscribers.add(user)
+    message = 'Вы подписались на расссылку новостей категории'
+
+    return render(request, 'subscribe.html', {'category': category, 'message': message})
 

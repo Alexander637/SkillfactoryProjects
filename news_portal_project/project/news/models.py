@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
+from django.conf import settings
 
 
 class Author(models.Model):
@@ -25,6 +26,10 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
+    subscribers = models.ManyToManyField(User, related_name='categories')
+
+    def __str__(self):
+        return self.name
 
 
 class Post(models.Model):
@@ -53,6 +58,14 @@ class Post(models.Model):
 
     def preview(self):
         return '{} ... {}'.format(self.text[0:80], str(self.rating))
+
+    def get_absolute_url(self):
+        if self.categoryType == self.NEWS:
+            link = f'{settings.SITE_URL}/news/{self.pk}'
+        elif self.categoryType == self.ARTICLE:
+            link = f'{settings.SITE_URL}/articles/{self.pk}'
+
+        return link
 
 
 class PostCategory(models.Model):

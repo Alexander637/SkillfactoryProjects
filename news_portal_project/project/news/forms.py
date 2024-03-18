@@ -1,5 +1,5 @@
 from django import forms
-from .models import Author, Post
+from .models import Author, Post, Category
 
 
 class PostForm(forms.ModelForm):
@@ -9,10 +9,14 @@ class PostForm(forms.ModelForm):
         label='Author',
         queryset=Author.objects.all(),
     )
+    category = forms.ModelChoiceField(
+        label='Post Category',
+        queryset=Category.objects.all(),
+    )
 
     class Meta:
         model = Post
-        fields = ['title', 'text', 'author']
+        fields = ['title', 'text', 'author', 'category']
 
 
 

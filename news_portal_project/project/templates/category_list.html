@@ -6,9 +6,13 @@ All posts
 {% endblock title %}
 
 {% block content %}
-    {% with 'flatpages/filters_form.html' as template_name %}
-        {% include template_name %}
-    {% endwith %}
+    {% if is_not_subscriber %}
+        <div>
+            <p class="text-center">
+                <a href="{% url 'subscribe' category.id %}" class="btn btn-secondary btn-sm">Подписаться</a>
+            </p>
+        </div>
+    {% endif %}
     <h1>Все посты</h1>
     {% if perms.news.add_post %}
         {% with 'create_post_link.html' as template_name %}
@@ -16,8 +20,9 @@ All posts
         {% endwith %}
     {% endif %}
     <hr>
-    {% if posts %}
-           {% for post in posts %}
+    {% if category %}
+
+           {% for post in object_list  %}
                 <div>
                     {% if post.categoryType == 'NW' %}
                         <a href="{% url 'new_detail' pk=post.id %}">

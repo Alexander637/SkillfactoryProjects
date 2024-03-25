@@ -6,10 +6,9 @@ from .models import Post, Category
 import datetime
 
 
-@shared_task
-def send_on_monday():
+def my_data_send(date_value, title_text):
     today = datetime.datetime.now()
-    last_week = today - datetime.timedelta(days=7)
+    last_week = today - datetime.timedelta(days=date_value)
     posts = Post.objects.filter(dateCreation__gte=last_week)
     categories = set(posts.values_list('postCategory__name', flat=True))
     subscribers = Category.objects.filter(name__in=categories).values_list('subscribers__email', flat=True)
@@ -22,35 +21,26 @@ def send_on_monday():
         }
     )
     msg = EmailMultiAlternatives(
-        subject='Посты за неделю',
+        subject=title_text,
         body='',
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=subscribers,
     )
     msg.attach_alternative(html_content, 'text/html')
     msg.send()
+
+
+@shared_task
+def send_on_monday():
+    date_value = 7
+    title_text = 'Посты за неделю'
+
+    my_data_send(date_value, title_text)
 
 
 @shared_task
 def send_every_morning():
-    today = datetime.datetime.now()
-    last_week = today - datetime.timedelta(days=1)
-    posts = Post.objects.filter(dateCreation__gte=last_week)
-    categories = set(posts.values_list('postCategory__name', flat=True))
-    subscribers = Category.objects.filter(name__in=categories).values_list('subscribers__email', flat=True)
-
-    html_content = render_to_string(
-        'daily_post.html',
-        {
-            'link': settings.SITE_URL,
-            'posts': posts
-        }
-    )
-    msg = EmailMultiAlternatives(
-        subject='Посты за сутки',
-        body='',
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=subscribers,
-    )
-    msg.attach_alternative(html_content, 'text/html')
-    msg.send()
+    date_value = 1
+    title_text = 'Посты за сутки'
+    my_data_send(date_value, title_text)
+    

@@ -8,7 +8,6 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, render
-from .tasks import send_on_monday, send_every_morning
 
 
 class FilteredListView(LoginRequiredMixin, ListView):

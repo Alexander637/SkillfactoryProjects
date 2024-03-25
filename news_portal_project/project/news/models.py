@@ -12,11 +12,11 @@ class Author(models.Model):
         return self.authorUser.username
 
     def update_rating(self):
-        postRat = self.post_set.aggregate(postRating=Sum('rating'))
+        postRat = self.post_set
         pRat = 0
         pRat += postRat.get('postRating')
 
-        commentRat = self.authorUser.comment_set.aggregate(commentRating=Sum('rating'))
+        commentRat = self.authorUser.comment_set
         cRat = 0
         cRat += commentRat.get('commentRating')
 

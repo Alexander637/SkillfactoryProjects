@@ -24,3 +24,4 @@
 *news_portal_project/project/news/templatetags/__pycache__
 *news_portal_project/project/accounts/__pycache__
 *news_portal_project/project/project/.env
+*news_portal_project/project/news/management/commands/__pycache__

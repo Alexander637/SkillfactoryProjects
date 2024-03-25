@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django_apscheduler',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.yandex',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -184,3 +185,19 @@ APSCHEDULER_DATETIME_FORMAT = 'N j, Y, f:s a'
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
 
 ACCOUNT_FORMS = {"signup": "accounts.forms.CustomSignupForm"}
+
+
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT')
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+
+
+CELERY_RESULT_BACKEND = 'redis://:{}@{}:{}'.format(REDIS_PASSWORD, REDIS_HOST, REDIS_PORT)
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_BROKER_URL = 'redis://:{}@{}:{}'.format(REDIS_PASSWORD, REDIS_HOST, REDIS_PORT)
+CELERY_TIMEZONE = 'Europe/Warsaw'
+
+
+

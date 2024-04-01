@@ -9,14 +9,21 @@ class PostForm(forms.ModelForm):
         label='Author',
         queryset=Author.objects.all(),
     )
-    category = forms.ModelChoiceField(
+    category = forms.ModelMultipleChoiceField(
         label='Post Category',
         queryset=Category.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
     )
 
     class Meta:
         model = Post
         fields = ['title', 'text', 'author', 'category']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['category'].initial = self.instance.postCategory.all()
+
 
 
 

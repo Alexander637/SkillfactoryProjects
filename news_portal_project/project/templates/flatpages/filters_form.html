@@ -1,3 +1,6 @@
+{% load cache %}
+
+{% cache 10 filter_form %}
 {% if request.resolver_match.url_name == "post_list" %}
     <form action="" method="get">
         {% csrf_token %}
@@ -20,3 +23,4 @@
         </div>
     </form>
 {% endif %}
+{% endcache %}

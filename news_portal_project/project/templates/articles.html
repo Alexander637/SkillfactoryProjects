@@ -23,6 +23,9 @@ Articles
                     <a href="{% url 'article_detail' pk=article.id %}">
                         <h5>{{ article.title|censor }}</h5>
                     </a>
+                     {% for category in article.postCategory.all %}
+                        <a href="{% url 'category_list' category.id %}">{{category.name}}</a>
+                    {% endfor %}
                     <p>{{ article.dateCreation|date:"d F Y"}}</p>
                     <p>{{ article.text|censor|truncatechars:20 }}</p>
                 </div>

@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import get_object_or_404, render
+from django.core.cache import cache
 
 
 class FilteredListView(LoginRequiredMixin, ListView):
@@ -74,6 +75,14 @@ class PostDetail(LoginRequiredMixin, DetailView):
     template_name = 'post.html'
     context_object_name = 'post'
 
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'product-{self.kwargs["pk"]}', None)
+
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'product-{self.kwargs["pk"]}', obj)
+            return obj
+
 
 class PostTypeMixin(LoginRequiredMixin):
     form_class = PostForm
@@ -133,7 +142,16 @@ class PostUpdate(PostTypeMixin, PermissionRequiredMixin, UpdateView):
     def form_valid(self, form):
         post = form.save(commit=False)
         post.author_id = form.cleaned_data['author'].id
-        post.save()
+        category = form.cleaned_data['category']
+        post.postCategory.clear()
+        
+        for ctg in category:
+            post_category = PostCategory(postThrough=post, categoryThrough=ctg)
+            post_category.save()
+
+        if form.is_valid():
+            post.save()
+
         return super().form_valid(form)
 
 

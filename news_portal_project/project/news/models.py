@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import Sum
 from django.conf import settings
+from django.core.cache import cache
 
 
 class Author(models.Model):
@@ -66,6 +66,10 @@ class Post(models.Model):
             link = f'{settings.SITE_URL}/articles/{self.pk}'
 
         return link
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(f'product-{self.pk}')
 
 
 class PostCategory(models.Model):

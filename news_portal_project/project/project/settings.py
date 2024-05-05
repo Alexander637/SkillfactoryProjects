@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+
 import os.path
 from pathlib import Path
 from dotenv import load_dotenv
@@ -22,6 +23,7 @@ MY_SECRET = os.getenv('MY_SECRET')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -32,8 +34,7 @@ SECRET_KEY = 'django-insecure-jzu7^v##@46lnt*0k5trn-49$dc9w+od%ce6agk(x*=+9rkfpm
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -209,3 +210,99 @@ CACHES = {
 }
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'console_formatter': {
+            'format': '{asctime} {levelname} {message}',
+            'style': '{',
+        },
+        'file_formatter': {
+            'format': '{asctime} {levelname} {module}: {message}',
+            'style': '{',
+        },
+        'errors_formatter': {
+            'format': '{asctime} {levelname} {message}\n{pathname}\n{exc_info}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'console_formatter',
+        },
+        'general_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'general.log'),
+            'formatter': 'file_formatter',
+        },
+        'errors_file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'errors.log'),
+            'formatter': 'errors_formatter',
+        },
+        'security_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOG_DIR, 'security.log'),
+            'formatter': 'file_formatter',
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'include_html': False,  # исключаем HTML из писем
+            'formatter': 'errors_formatter',
+            'filters': ['require_debug_false'],  # применяем фильтр require_debug_false
+        },
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'general_file', 'errors_file', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'django.request': {
+            'handlers': ['errors_file', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.server': {
+            'handlers': ['errors_file', 'mail_admins'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.template': {
+            'handlers': ['errors_file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.db.backends': {
+            'handlers': ['errors_file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['security_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
+
+if DEBUG:
+    LOGGING['loggers']['django']['handlers'] = ['console']
+else:
+    LOGGING['loggers']['django']['handlers'] = ['general_file', 'errors_file', 'mail_admins']

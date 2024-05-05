@@ -22,7 +22,9 @@ class PostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
-            self.fields['category'].initial = self.instance.postCategory.all()
+            initial_categories = self.instance.postCategory.all()
+            self.initial['category'] = list(initial_categories)
+
 
 
 

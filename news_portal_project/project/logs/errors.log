@@ -1,0 +1,19 @@
+2024-05-05 16:23:17,699 ERROR Internal Server Error: /posts/
+C:\Users\admin\PycharmProjects\projects\skillfactory\news_portal_project\venv\Lib\site-packages\django\utils\log.py
+(<class 'ValueError'>, ValueError('Это мое намеренное исключение'), <traceback object at 0x000001D3100F5840>)
+Traceback (most recent call last):
+  File "C:\Users\admin\PycharmProjects\projects\skillfactory\news_portal_project\venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\admin\PycharmProjects\projects\skillfactory\news_portal_project\venv\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\admin\PycharmProjects\projects\skillfactory\news_portal_project\venv\Lib\site-packages\django\views\generic\base.py", line 97, in view
+    self = cls(**initkwargs)
+           ^^^^^^^^^^^^^^^^^
+  File "C:\Users\admin\PycharmProjects\projects\skillfactory\news_portal_project\project\news\views.py", line 46, in __init__
+    raise ValueError("Это мое намеренное исключение")
+ValueError: Это мое намеренное исключение
+2024-05-05 16:23:17,747 ERROR "GET /posts/ HTTP/1.1" 500 145
+C:\Users\admin\PycharmProjects\projects\skillfactory\news_portal_project\venv\Lib\site-packages\django\core\servers\basehttp.py
+None

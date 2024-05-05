@@ -118,6 +118,7 @@ class PostCreate(PostTypeMixin, PermissionRequiredMixin, CreateView):
     permission_required = 'news.add_post'
 
     def form_valid(self, form):
+
         url_path = self.request.path
         post = form.save(commit=False)
 
@@ -125,13 +126,17 @@ class PostCreate(PostTypeMixin, PermissionRequiredMixin, CreateView):
             post.categoryType = 'AR'
         elif 'news' in url_path:
             post.categoryType = 'NW'
-        post.author_id = form.cleaned_data['author'].id
-        category = form.cleaned_data['category']
-        post_category = PostCategory(postThrough=post, categoryThrough=category)
 
-        if form.is_valid():
-            post.save()
-            post_category.save()
+        post.author_id = form.cleaned_data['author'].id
+        categories = form.cleaned_data['category']
+
+        if categories:
+            if form.is_valid():
+                post.save()
+
+                for category in categories:
+                    post_category = PostCategory(postThrough=post, categoryThrough=category)
+                    post_category.save()
 
         return super().form_valid(form)
 
@@ -144,7 +149,6 @@ class PostUpdate(PostTypeMixin, PermissionRequiredMixin, UpdateView):
         post.author_id = form.cleaned_data['author'].id
         category = form.cleaned_data['category']
         post.postCategory.clear()
-        
         for ctg in category:
             post_category = PostCategory(postThrough=post, categoryThrough=ctg)
             post_category.save()

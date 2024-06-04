@@ -1,0 +1,22 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block content %}
+    {% if advertisements %}
+        {% for advertisement in advertisements %}
+            <div>
+                <a href="{% url 'advertisement_detail' pk=advertisement.id %}">
+                    <h5>{{ advertisement.title }}</h5>
+                </a>
+                <p>{{ advertisement.category }}</p>
+                <p>{{ advertisement.content|remove_images_from_content|safe_truncate_html:20 }}</p>
+                <p>{{ advertisement.user.username }}</p>
+                <p>{{ advertisement.created_at }}</p>
+                <hr>
+                <br>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h2>advertisements isn't exist</h2>
+    {% endif %}
+{% endblock content %}

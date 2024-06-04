@@ -26,3 +26,14 @@
 *news_portal_project/project/project/.env
 *news_portal_project/project/news/management/commands/__pycache__
 *news_portal_project/project/cache_files
+*bulletin_board/.idea
+*bulletin_board/project/accounts/__pycache__
+*bulletin_board/project/board/__pycache__
+*bulletin_board/project/accounts/migrations/__pycache__
+*bulletin_board/project/board/migrations/__pycache__
+*bulletin_board/project/board/templatetags/__pycache__
+*bulletin_board/project/media
+*bulletin_board/project/project/__pycache__
+*bulletin_board/project/project/.env
+*bulletin_board/project/db.sqlite3
+*bulletin_board/venv

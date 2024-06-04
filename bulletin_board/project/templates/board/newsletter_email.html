@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weekly Newsletter</title>
+</head>
+<body>
+    <h1>Weekly Newsletter</h1>
+    <p>Dear {{ user.get_full_name|default:user.username }},</p>
+    <p>Here are the new advertisements from the past week:</p>
+    <ul>
+        {% for ad in advertisements %}
+            <li><a href="{{ ad.get_absolute_url }}">{{ ad.title }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

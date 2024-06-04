@@ -1,0 +1,45 @@
+{% extends 'flatpages/default.html' %}
+{% block title %}
+    {{ advertisement.title }}
+{% endblock title %}
+{% block content %}
+    <div>
+    {% if advertisement.user == request.user %}
+        <a href="{% url 'advertisement_update' pk=advertisement.id %}">Update advertisement</a>
+    {% endif %}
+        <h5>{{ advertisement.title }}</h5>
+        <p>{{ advertisement.category }}</p>
+        <p>{{ advertisement.content|safe }}</p>
+        <p>{{ advertisement.user.username }}</p>
+        <p>{{ advertisement.created_at }}</p>
+        {% if advertisement.user == request.user %}
+        <a href="{% url 'advertisement_delete' pk=advertisement.id %}">Delete advertisement</a>
+        {% endif %}
+        <br>
+    </div>
+
+    <h2>Responses</h2>
+    <ul>
+            <hr>
+        {% for response in responses %}
+        <li>
+            <p>{{ response.text }}</p>
+            <p>{{ response.user.username }} at {{ response.created_at }}</p>
+            {% if request.user == response.user %}
+            <form action="{% url 'response_delete' response.pk %}" method="post">{% csrf_token %}
+                <input type="submit" value="Delete">
+            </form>
+            {% endif %}
+        </li>
+        <hr>
+        {% endfor %}
+    </ul>
+    {% if user.is_authenticated %}
+        <h2>Leave a response</h2>
+        <form action="{% url 'response_create' advertisement.pk %}" method="post">
+            {% csrf_token %}
+            {{ response_form.as_p }}
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
+{% endblock content %}

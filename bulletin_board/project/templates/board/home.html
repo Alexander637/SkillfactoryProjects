@@ -1,0 +1,39 @@
+{% extends 'flatpages/default.html' %}
+{% block content %}
+   {% if user.is_authenticated %}
+        <h1>Hi, {{ user.username }}!</h1>
+        <a href="{% url 'advertisement_create' %}">Create advertisement</a>
+
+        <h2>My Advertisements Responses</h2>
+<form method="get">
+    <select name="advertisement" id="advertisement">
+        <option value="">all advertisements</option>
+        {% for advertisement in user_advertisements %}
+            <option value="{{ advertisement.id }}" {% if advertisement.id|stringformat:"s" == selected_advertisement %}selected{% endif %}>{{ advertisement.title }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+    <button type="submit">Filter</button>
+</form>
+<br>
+
+        <ul>
+            {% for response in responses %}
+                <li>
+                    <p><strong>Advertisement:</strong> {{ response.advertisement.title }}</p>
+                    <p><strong>User:</strong> {{ response.user.username }}</p>
+                    <p><strong>Text:</strong> {{ response.text }}</p>
+                    <p><strong>Created at:</strong> {{ response.created_at }}</p>
+                    <p><strong>Accepted:</strong> {{ response.accepted }}</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="response_id" value="{{ response.id }}">
+                        <button type="submit" name="accept">Accept</button>
+                        <button type="submit" name="delete">Delete</button>
+                    </form>
+                </li>
+                <br>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock content %}

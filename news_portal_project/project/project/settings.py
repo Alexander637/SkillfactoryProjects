@@ -254,9 +254,9 @@ LOGGING = {
         'mail_admins': {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler',
-            'include_html': False,  # исключаем HTML из писем
+            'include_html': False,
             'formatter': 'errors_formatter',
-            'filters': ['require_debug_false'],  # применяем фильтр require_debug_false
+            'filters': ['require_debug_false'],
         },
     },
     'filters': {

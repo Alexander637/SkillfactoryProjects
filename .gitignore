@@ -35,5 +35,4 @@
 *bulletin_board/project/media
 *bulletin_board/project/project/__pycache__
 *bulletin_board/project/project/.env
-*bulletin_board/project/db.sqlite3
 *bulletin_board/venv
